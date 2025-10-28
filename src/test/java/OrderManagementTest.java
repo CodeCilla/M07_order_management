@@ -1,12 +1,12 @@
+import fr.ekod.Product;
+import fr.ekod.ShoppingCart;
+import fr.ekod.Order;
+import fr.ekod.exceptions.InvalidDiscountCodeException;
+import fr.ekod.exceptions.OutOfStockException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import fr.ekod.exceptions.InvalidDiscountCodeException;
-import fr.ekod.exceptions.OutOfStockException;
-import fr.ekod.Invoice;
-import fr.ekod.Order;
-import fr.ekod.Product;
-import fr.ekod.ShoppingCart;
+import static org.junit.jupiter.api.Assertions.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class OrderManagementTest {
@@ -120,4 +120,45 @@ public class OrderManagementTest {
 
     }
 
+    //TODO: Implement tests for Cart
+    @Test
+    void testStockDecrementWhenProductAddedToCart() {
+        Product testProduct = new Product("Test Product", 999.99, 5);
+        assertEquals(5, testProduct.getStockQuantity(), "La quantité en stock doit être 5 avant d'ajouter le produit");
+        ShoppingCart shoppingCart = new ShoppingCart();
+        try {
+            shoppingCart.addProduct(testProduct);
+        } catch (OutOfStockException e) {
+            fail("L'exception OutOfStockException ne devrait pas être lancée ici");
+        }
+        assertEquals(4, testProduct.getStockQuantity(), "La quantité en stock doit être 4 après avoir ajouté le produit");
+    }
+
+        // TODO: Implement tests for Invoice
+
+        // TODO: Implement tests for Order
+        @Test
+         void testDiscount() {
+            Product testProduct = new Product("Test Product", 15, 5);
+            ShoppingCart shoppingCart = new ShoppingCart();
+            try {
+                shoppingCart.addProduct(testProduct);
+            } catch (OutOfStockException e) {
+                fail("L'exception OutOfStockException ne devrait pas être lancée ici");
+            }
+            Order testOrder = new Order(shoppingCart);
+            try {
+                testOrder.applyDiscount("PROMO10");
+            } catch (InvalidDiscountCodeException e) {
+                assertEquals("Code de réduction invalide: PROMO10", e.getMessage());
+            }
+            try {
+                testOrder.applyDiscount("PROMO");
+            } catch (InvalidDiscountCodeException e) {
+                assertEquals("Code de réduction PROMO n'existe pas", e.getMessage());
+            }
+            assertEquals(0.15, testOrder.getDiscount(), 0.001);
+            assertEquals(12.75, shoppingCart.getTotalPrice() * (1 - testOrder.getDiscount()), 0.001);
+        }
 }
+
