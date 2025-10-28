@@ -16,7 +16,6 @@ public class Product {
     }
 
     public double getPrice() {
-        price = price * 1.01;
         return price;
     }
 

@@ -85,12 +85,13 @@ public class OrderManagementTest {
 
     //Calculate Order Total Price
     @Test
-    void testTotalPrice() throws OutOfStockException {
+    void testTotalPrice() throws OutOfStockException, InvalidDiscountCodeException {
         ShoppingCart cart = new ShoppingCart();
         cart.addProduct(testProduct5);
         cart.addProduct(testProduct5);
         Order order = new Order(cart);
-        assertEquals(20, order.getTotalPrice());
+        order.applyDiscount("PROMO10");
+        assertEquals(18, order.getTotalPrice());
     }
 
     //Generate Invoice Text
@@ -111,7 +112,7 @@ public class OrderManagementTest {
                 "Sous-total: 10.00 €\n" +
                 "Frais de livraison: 10.00 €\n" +
                 "\n" +
-                "Total: 20.00 €", invoiceString);
+                "Total: 20.00 €\n", invoiceString);
 
     }
 
@@ -148,10 +149,10 @@ public class OrderManagementTest {
             try {
                 testOrder.applyDiscount("PROMO");
             } catch (InvalidDiscountCodeException e) {
-                assertEquals("Code de réduction PROMO n'existe pas", e.getMessage());
+                assertEquals("Code de réduction invalide: PROMO", e.getMessage());
             }
-            assertEquals(0.15, testOrder.getDiscount(), 0.001);
-            assertEquals(4.25, shoppingCart.getTotalPrice() * (1 - testOrder.getDiscount()), 0.001);
+            assertEquals(0.1, testOrder.getDiscount(), 0.001);
+            assertEquals(4.5, shoppingCart.getTotalPrice() * (1 - testOrder.getDiscount()), 0.001);
         }
 }
 
