@@ -18,7 +18,27 @@ public class OrderManagementTest {
         // TODO: Initialize products and cart
     }
 
-    // TODO: Implement tests for Product
+        @Test
+    void testProductCreationNoName() {
+        Product testProduct = new Product("", 999.99, 5);
+        assertEquals("", testProduct.getName());
+        assertEquals(999.99, testProduct.getPrice());
+        assertEquals(5, testProduct.getStockQuantity());
+    }
+    @Test
+    void testProductCreationNoPrice() {
+        Product testProduct = new Product("Test Product", 0.0, 5);
+        assertEquals("Test Product", testProduct.getName());
+        assertEquals(0.0, testProduct.getPrice());
+        assertEquals(5, testProduct.getStockQuantity());
+    }
+    @Test
+    void testProductCreationNoStock() {
+        Product testProduct = new Product("Test Product", 999.99, 0);
+        assertEquals("Test Product", testProduct.getName());
+        assertEquals(999.99, testProduct.getPrice());
+        assertEquals(0, testProduct.getStockQuantity());
+    }
 
     // TODO: Implement tests for ShoppingCart
 
