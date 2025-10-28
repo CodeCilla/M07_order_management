@@ -123,7 +123,6 @@ public class OrderManagementTest {
     //TODO: Implement tests for Cart
     @Test
     void testStockDecrementWhenProductAddedToCart() {
-        Product testProduct = new Product("Test Product", 999.99, 5);
         assertEquals(5, testProduct.getStockQuantity(), "La quantité en stock doit être 5 avant d'ajouter le produit");
         ShoppingCart shoppingCart = new ShoppingCart();
         try {
@@ -139,10 +138,9 @@ public class OrderManagementTest {
         // TODO: Implement tests for Order
         @Test
          void testDiscount() {
-            Product testProduct = new Product("Test Product", 15, 5);
             ShoppingCart shoppingCart = new ShoppingCart();
             try {
-                shoppingCart.addProduct(testProduct);
+                shoppingCart.addProduct(testProduct5);
             } catch (OutOfStockException e) {
                 fail("L'exception OutOfStockException ne devrait pas être lancée ici");
             }
@@ -158,7 +156,7 @@ public class OrderManagementTest {
                 assertEquals("Code de réduction PROMO n'existe pas", e.getMessage());
             }
             assertEquals(0.15, testOrder.getDiscount(), 0.001);
-            assertEquals(12.75, shoppingCart.getTotalPrice() * (1 - testOrder.getDiscount()), 0.001);
+            assertEquals(4.25, shoppingCart.getTotalPrice() * (1 - testOrder.getDiscount()), 0.001);
         }
 }
 
