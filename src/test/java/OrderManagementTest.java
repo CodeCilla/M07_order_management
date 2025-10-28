@@ -1,30 +1,29 @@
+import fr.ekod.Product;
+import fr.ekod.ShoppingCart;
+import fr.ekod.exceptions.OutOfStockException;
 import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Test;
 
-// import fr.ekod.exceptions.InvalidDiscountCodeException;
-// import fr.ekod.exceptions.OutOfStockException;
-// import fr.ekod.Invoice;
-// import fr.ekod.Order;
-// import fr.ekod.Product;
-// import fr.ekod.ShoppingCart;
-
-// import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrderManagementTest {
-    // TODO: Declare products and cart
+    private Product testProduct;
+    private ShoppingCart cart;
 
     @BeforeEach
     void setUp() {
-        // TODO: Initialize products and cart
+        testProduct = new Product("Test Product", 999.99, 5);
+        cart = new ShoppingCart();
     }
 
-        @Test
+    @Test
     void testProductCreationNoName() {
         Product testProduct = new Product("", 999.99, 5);
         assertEquals("", testProduct.getName());
         assertEquals(999.99, testProduct.getPrice());
         assertEquals(5, testProduct.getStockQuantity());
     }
+
     @Test
     void testProductCreationNoPrice() {
         Product testProduct = new Product("Test Product", 0.0, 5);
@@ -32,6 +31,7 @@ public class OrderManagementTest {
         assertEquals(0.0, testProduct.getPrice());
         assertEquals(5, testProduct.getStockQuantity());
     }
+
     @Test
     void testProductCreationNoStock() {
         Product testProduct = new Product("Test Product", 999.99, 0);
@@ -40,9 +40,21 @@ public class OrderManagementTest {
         assertEquals(0, testProduct.getStockQuantity());
     }
 
-    // TODO: Implement tests for ShoppingCart
+    //TODO: Implement tests for Cart
+    @Test
+    void testStockDecrementWhenProductAddedToCart() {
+        Product testProduct = new Product("Test Product", 999.99, 5);
+        assertEquals(5, testProduct.getStockQuantity(), "La quantité en stock doit être 5 avant d'ajouter le produit");
+        ShoppingCart shoppingCart = new ShoppingCart();
+        try {
+            shoppingCart.addProduct(testProduct);
+        } catch (OutOfStockException e) {
+            fail("L'exception OutOfStockException ne devrait pas être lancée ici");
+        }
+        assertEquals(4, testProduct.getStockQuantity(), "La quantité en stock doit être 4 après avoir ajouté le produit");
+    }
+        // TODO: Implement tests for Invoice
 
-    // TODO: Implement tests for Invoice
+        // TODO: Implement tests for Order
+    }
 
-    // TODO: Implement tests for Order
-}
