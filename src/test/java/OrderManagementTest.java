@@ -12,12 +12,16 @@ import static org.junit.jupiter.api.Assertions.*;
 public class OrderManagementTest {
 
     private Product testProduct;
+    private Product testProduct5;
+    private Product testEmptyProduct;
     private ShoppingCart testCart;
 
     @BeforeEach
     void setUp() {
-        testProduct = new Product("", 999.99, 5);
+        testProduct = new Product("test", 999.99, 5);
+        testProduct5 = new Product("test", 5, 10);
         testCart = new ShoppingCart();
+        testEmptyProduct = new Product("",20, 0);
     }
 
     @Test
@@ -44,14 +48,67 @@ public class OrderManagementTest {
     }
 
     @Test
-    void testAddProductToCart() {
+    void testAddProductToCart() throws OutOfStockException {
         ShoppingCart cart = new ShoppingCart();
         cart.addProduct(testProduct);
         assertEquals(1, cart.getItemCount());
-        assertEquals(testProduct, pr());
     }
 
-    // TODO: Implement tests for Invoice
+    @Test
+    void testAddUnavailableProductInCart() throws OutOfStockException {
+        ShoppingCart cart = new ShoppingCart();
+        cart.addProduct(testEmptyProduct);
+        assertEquals(0, cart.getItemCount());
+    }
 
-    // TODO: Implement tests for Order
+    @Test
+    void testAddProductInCartCount() throws OutOfStockException {
+        ShoppingCart cart = new ShoppingCart();
+        cart.addProduct(testProduct);
+        assertEquals(1, cart.getItemCount());
+        cart.addProduct(testProduct);
+        assertEquals(2, cart.getItemCount());
+        cart.removeProduct(testProduct);
+        assertEquals(1, cart.getItemCount());
+    }
+
+    @Test
+    void testDeliveryFee() throws OutOfStockException {
+        ShoppingCart cart = new ShoppingCart();
+        cart.addProduct(testProduct);
+        cart.addProduct(testProduct);
+        Order order = new Order(cart);
+        assertEquals(10, order.getDeliveryFee());
+    }
+
+    @Test
+    void testTotalPrice() throws OutOfStockException {
+        ShoppingCart cart = new ShoppingCart();
+        cart.addProduct(testProduct5);
+        cart.addProduct(testProduct5);
+        Order order = new Order(cart);
+        assertEquals(20, order.getTotalPrice());
+    }
+
+    @Test
+    void testInvoice() throws OutOfStockException {
+        ShoppingCart cart = new ShoppingCart();
+        cart.addProduct(testProduct5);
+        cart.addProduct(testProduct5);
+        Order order = new Order(cart);
+        Invoice invoice = new Invoice(order);
+        String invoiceString = invoice.generateInvoice();
+        assertEquals("=== FACTURE ===\n" +
+                "\n" +
+                "Articles:\n" +
+                "- test: 5.00 €\n" +
+                "- test: 5.00 €\n" +
+                "\n" +
+                "Sous-total: 10.00 €\n" +
+                "Frais de livraison: 10.00 €\n" +
+                "\n" +
+                "Total: 20.00 €", invoiceString);
+
+    }
+
 }
