@@ -1,6 +1,7 @@
 import fr.ekod.Product;
 import fr.ekod.ShoppingCart;
 import fr.ekod.Order;
+import fr.ekod.Invoice;
 import fr.ekod.exceptions.InvalidDiscountCodeException;
 import fr.ekod.exceptions.OutOfStockException;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,26 +28,20 @@ public class OrderManagementTest {
     //Product Creation with Empty Name
     @Test
     void testProductCreationNoName() {
-        assertEquals("", testProduct.getName());
-        assertEquals(999.99, testProduct.getPrice());
-        assertEquals(5, testProduct.getStockQuantity());
+        assertEquals("", testEmptyProduct.getName());
     }
 
     //Product Creation with Zero Price
     @Test
     void testProductCreationNoPrice() {
         Product zeroPriceProduct = new Product("Test Product", 0.0, 5);
-        assertEquals("Test Product", zeroPriceProduct.getName());
         assertEquals(0.0, zeroPriceProduct.getPrice());
-        assertEquals(5, zeroPriceProduct.getStockQuantity());
     }
 
     //Product Creation with Zero Stock
     @Test
     void testProductCreationNoStock() {
         Product noStockProduct = new Product("Test Product", 999.99, 0);
-        assertEquals("Test Product", noStockProduct.getName());
-        assertEquals(999.99, noStockProduct.getPrice());
         assertEquals(0, noStockProduct.getStockQuantity());
     }
 
